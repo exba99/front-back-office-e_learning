@@ -1,0 +1,39 @@
+.btn-valider {
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+  border: 2px solid #225828 !important;
+  background-color: rgba(34, 88, 40, 0.5) !important;
+  margin: 10px 0;
+  opacity: 1;
+  font-family: Nunito;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.35;
+  color: #225828 !important;
+  cursor: no-drop;
+}
+
+.valid-btn {
+  background-color: rgba(34, 88, 40) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+}
+
+.valid-btn:hover,
+.valid-btn:active,
+.valid-btn:focus {
+  background-color: rgba(34, 88, 40) !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+}
+
+.btn-valider:hover,
+.btn-valider:active,
+.btn-valider:focus {
+  background-color: rgba(34, 88, 40, 0.5);
+  color: #225828;
+  border: 1px solid #225828;
+  outline: none;
+  box-shadow: none;
+}
