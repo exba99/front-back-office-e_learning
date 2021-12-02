@@ -1,0 +1,53 @@
+import { rootApi } from '../';
+
+import { {{ properCase apiName }}ApiType } from './types';
+
+
+ export const {{ properCase apiName }}Api = rootApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getAll{{ properCase apiName }}: builder.query<{{ properCase apiName }}ApiType[], undefined>({
+      query: () => `/{{ lowerCase apiName }}`,
+    }),
+    get{{ properCase apiName }}ById: builder.query<{{ properCase apiName }}ApiType, number>({
+      query: (id: number) => `/{{ lowerCase apiName }}/${id}`,
+    }),
+    save{{ properCase apiName }}: builder.mutation<{{ properCase apiName }}ApiType, {{ properCase apiName }}ApiType>({
+      query: (payload: {{ properCase apiName }}ApiType) => ({
+        url: `/{{ lowerCase apiName }}`,
+        method: "POST",
+        body: payload,
+      })
+    }),
+    update{{ properCase apiName }}: builder.mutation<{{ properCase apiName }}ApiType, {{ properCase apiName }}ApiType>({
+      query: (payload: {{ properCase apiName }}ApiType) => ({
+        url: `/{{ properCase apiName }}`,
+        method: "PUT",
+        body: payload,
+      })
+    }),
+    delete{{ properCase apiName }}: builder.mutation<{{ properCase apiName }}ApiType, number>({
+      query: (id: number) => ({
+        url: `/{{ lowerCase apiName }}/${id}`,
+        method: "DELETE",
+      })
+    }),
+  }),
+  overrideExisting: false,
+})
+
+// Export hooks for usage in function components, which are
+// auto-generated based on the defined endpoints
+export const { useGet{{ properCase apiName }}ByIdQuery, useGetAll{{ properCase apiName }}Query, useSave{{ properCase apiName }}Mutation, useUpdate{{ properCase apiName }}Mutation, useDelete{{ properCase apiName }}Mutation } = {{ properCase apiName }}Api
+
+
+/**
+ * Example Usage:
+ *
+ * export function MyComponentNeedingThisSlice() {
+ *  const { actions } = use{{ properCase apiName }}Slice();
+ *
+ *  const onButtonClick = (evt) => {
+ *    dispatch(actions.someAction());
+ *   };
+ * }
+ */

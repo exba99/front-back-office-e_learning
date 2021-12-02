@@ -7,13 +7,19 @@ import React, { memo } from 'react';
 import { Form } from 'antd';
 import { CustomInputText } from 'app/components/CustomInputText/Loadable';
 import { CustomButtonValidate } from 'app/components/CustomButtonValidate/Loadable';
+import { useLoginMutation } from 'app/services/api/AuthApi';
+import { LoginModel } from 'app/services/api/AuthApi/types';
 
 interface Props {}
 
 export const LoginPage = memo((props: Props) => {
+  const [login, { isLoading, isError, error }] = useLoginMutation();
+
   const onFinish = (values: any) => {
-    console.log(values);
+    const paylod: LoginModel = values;
+    login(paylod).unwrap();
   };
+  //console.log(error!.message);
 
   return (
     <div id="main-wrapper">
@@ -35,7 +41,7 @@ export const LoginPage = memo((props: Props) => {
                       </div>
                       <div className="form-group">
                         <CustomInputText
-                          nameInput="email"
+                          nameInput="Email"
                           label="Email"
                           required={true}
                           errorMessage="Ce champ est obligatoire"
@@ -45,7 +51,7 @@ export const LoginPage = memo((props: Props) => {
                       </div>
                       <div className="form-group">
                         <CustomInputText
-                          nameInput="password"
+                          nameInput="Password"
                           label="Mot de passe"
                           required={true}
                           errorMessage="Ce champ est obligatoire"
@@ -57,6 +63,11 @@ export const LoginPage = memo((props: Props) => {
                         <CustomButtonValidate text="Login" />
                       </div>
                     </div>
+                    {/* {isError && error && (
+                      <span className="alert alert-danger">
+                        {error}
+                      </span>
+                    )} */}
                   </div>
                   <div className="crs_log__footer d-flex justify-content-between">
                     <div className="fhg_45">
