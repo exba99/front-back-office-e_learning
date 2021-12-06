@@ -1,15 +1,39 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {
+  configureStore,
+  getDefaultMiddleware,
+  StoreEnhancer,
+} from '@reduxjs/toolkit';
+import { createInjectorsEnhancer } from 'redux-injectors';
+import createSagaMiddleware from 'redux-saga';
+
 import { createReducer } from './reducers';
 import { rootApi } from 'app/services/api';
 export function configureAppStore() {
+  const reduxSagaMonitorOptions = {};
+  const sagaMiddleware = createSagaMiddleware(reduxSagaMonitorOptions);
+  const { run: runSaga } = sagaMiddleware;
+
+  // Create the store with saga middleware
+  const middlewares = [sagaMiddleware];
+
+  const enhancers = [
+    createInjectorsEnhancer({
+      createReducer,
+      runSaga,
+    }),
+  ] as StoreEnhancer[];
+
   const store = configureStore({
     reducer: createReducer(),
-    middleware: getDefaultMiddleware =>
-      getDefaultMiddleware().concat(rootApi.middleware),
+    middleware: [
+      ...getDefaultMiddleware().concat(rootApi.middleware),
+      ...middlewares,
+    ],
     devTools:
       /* istanbul ignore next line */
       process.env.NODE_ENV !== 'production' ||
       process.env.PUBLIC_URL.length > 0,
+    enhancers,
   });
 
   return store;

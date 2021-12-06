@@ -11,16 +11,22 @@ interface Props extends ButtonProps {
   isValid?: boolean;
   className?: string;
   text: string;
+  fullWidth?: boolean;
 }
 
 export const CustomButtonValidate = memo((props: Props) => {
   const {
     isValid = true,
-    className = 'btn full-width btn-md theme-bg text-white',
+    className = 'btn btn-md theme-bg text-white',
     text,
+    fullWidth = false,
   } = props;
   return (
-    <button type="submit" className={className} disabled={!isValid}>
+    <button
+      type="submit"
+      className={`${className} ${fullWidth && 'full-width'}`}
+      disabled={!isValid}
+    >
       {text}
     </button>
   );

@@ -53,7 +53,7 @@ body {
   background: #ffffff;
   color: #3c4852;
   font-size: 15px;
-  font-family: 'Muli', sans-serif;
+  font-family: 'Muli', sans-serif !important;
   margin: 0;
   overflow-x: hidden !important;
   font-weight: 400;
@@ -7412,7 +7412,7 @@ table.table.dash_list tr th {
   display: block;
   padding: 1rem;
 }
-a.remove_tools {
+.remove_tools {
   width: 40px;
   height: 40px;
   display: inline-flex;
@@ -7427,9 +7427,10 @@ a.remove_tools {
   z-index: 1;
   transition: all ease 0.4s;
   opacity: 0;
+  cursor: pointer;
 }
-.dash_crs_cat:hover a.remove_tools,
-.dash_crs_cat:focus a.remove_tools {
+.dash_crs_cat:hover .remove_tools,
+.dash_crs_cat:focus .remove_tools {
   opacity: 1;
 }
 nav.transparent .breadcrumb {

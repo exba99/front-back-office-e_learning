@@ -16,6 +16,8 @@ interface Props {
   type?: string;
   placeholder?: string;
   className?: string;
+  initialValue?: string;
+  readOnly?: boolean;
 }
 
 export const CustomInputText = memo((props: Props) => {
@@ -27,13 +29,16 @@ export const CustomInputText = memo((props: Props) => {
     placeholder,
     type = 'text',
     className = 'form-control',
+    initialValue,
+    readOnly = false,
   } = props;
 
   return (
-    <Div>
+    <div className="form-group smalls">
+      <label>{label}</label>
       <Form.Item
         name={nameInput}
-        label={label}
+        initialValue={initialValue}
         rules={[
           {
             required: required,
@@ -56,10 +61,13 @@ export const CustomInputText = memo((props: Props) => {
         ]}
         className="form-input"
       >
-        <input placeholder={placeholder} className={className} type={type} />
+        <input
+          placeholder={placeholder}
+          readOnly={readOnly}
+          className={className}
+          type={type}
+        />
       </Form.Item>
-    </Div>
+    </div>
   );
 });
-
-const Div = styled.div``;

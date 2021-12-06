@@ -2,6 +2,7 @@ import { NodePlopAPI } from 'node-plop';
 import { componentGenerator } from './component';
 import shell from 'shelljs';
 import { apiGenerator } from './api';
+import { sliceGenerator } from './slice';
 interface PrettifyCustomActionData {
   path: string;
 }
@@ -9,6 +10,7 @@ interface PrettifyCustomActionData {
 export default function plop(plop: NodePlopAPI) {
   plop.setGenerator('component', componentGenerator);
   plop.setGenerator('api', apiGenerator);
+  plop.setGenerator('slice', sliceGenerator);
 
   plop.setActionType('prettify', (answers, config) => {
     const data = config.data as PrettifyCustomActionData;

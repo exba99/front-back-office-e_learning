@@ -20,7 +20,7 @@ export const PrivateRoute = memo((props: Props) => {
     <Route
       {...rest}
       render={props =>
-        localStorage.getItem('id_token') ? (
+        localStorage.getItem('token') ? (
           <Component {...props} />
         ) : (
           <Redirect to={{ pathname: '/', state: { from: props.location } }} />
