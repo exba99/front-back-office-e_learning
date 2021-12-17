@@ -3,7 +3,7 @@
  * CustomInputTextarea
  *
  */
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import ErrorRoundedIcon from '@material-ui/icons/ErrorRounded';
 import { Form } from 'antd';
@@ -63,6 +63,7 @@ export const CustomInputTextarea = memo((props: Props) => {
           placeholder={placeholder}
           readOnly={readOnly}
           className={className}
+          id="summernote"
         ></textarea>
       </Form.Item>
     </Div>

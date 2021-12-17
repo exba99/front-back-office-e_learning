@@ -3,24 +3,28 @@
  * Header
  *
  */
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import styled from 'styled-components/macro';
 import Logo from 'app/assets/img/logo.png';
 import { ItemMenu } from '../ItemMenu/Loadable';
 import { NavLink } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectInfoUser } from 'app/pages/DashboardPage/slice/selectors';
 import history from 'utils/history';
-import { reloadJs } from 'utils/insertJQuery';
+import {
+  DashboardApi,
+  useLoadInfoUserQuery,
+} from 'app/services/api/DashboardApi';
+import { rootApi } from 'app/services/api';
+import { useSelector } from 'react-redux';
 
 interface Props {}
 
 export const Header = memo((props: Props) => {
-  useEffect(() => {
-    reloadJs();
-  }, []);
-  const infoUser = useSelector(selectInfoUser);
+  const selectInfoUser = useMemo(
+    () => DashboardApi.endpoints.loadInfoUser.select(),
+    [],
+  );
 
+  const { data: infoUser } = useSelector(selectInfoUser);
   const signOut = () => {
     localStorage.setItem('token', '');
     history.push('/');

@@ -3,47 +3,60 @@ import { rootApi } from '../';
 
 import { CategoryManagementApiType } from './types';
 
-export const CategoryManagementApi = rootApi.injectEndpoints({
-  endpoints: builder => ({
-    getAllCategories: builder.mutation({
-      query: () => ({
-        url: `api/category/get-all`,
-        headers: authHeader(),
+export const CategoryManagementApi = rootApi
+  .enhanceEndpoints({
+    addTagTypes: ['getAllCategories'],
+    endpoints: {
+      getAllCategories: {
+        providesTags: ['getAllCategories'],
+      },
+    },
+  })
+  .injectEndpoints({
+    endpoints: builder => ({
+      getAllCategories: builder.query<any, void>({
+        query: () => ({
+          url: `api/category/get-all`,
+          headers: authHeader(),
+        }),
+        providesTags: ['getAllCategories'],
+      }),
+      updateCategory: builder.mutation({
+        query: payload => ({
+          url: `api/category/update`,
+          method: 'PUT',
+          body: payload,
+          headers: authHeader(),
+        }),
+        invalidatesTags: ['getAllCategories'],
+      }),
+      addCategory: builder.mutation({
+        query: payload => ({
+          url: `api/category/add`,
+          method: 'POST',
+          body: payload,
+          headers: authHeader(),
+        }),
+        invalidatesTags: ['getAllCategories'],
+      }),
+      deleteCategory: builder.mutation({
+        query: (idCategories: Number) => ({
+          url: `api/category/delete/${idCategories}`,
+          method: 'DELETE',
+          headers: authHeader(),
+        }),
+        invalidatesTags: ['getAllCategories'],
       }),
     }),
-    updateCategory: builder.mutation({
-      query: payload => ({
-        url: `api/category/update`,
-        method: 'PUT',
-        body: payload,
-        headers: authHeader(),
-      }),
-    }),
-    addCategory: builder.mutation({
-      query: payload => ({
-        url: `api/category/add`,
-        method: 'POST',
-        body: payload,
-        headers: authHeader(),
-      }),
-    }),
-    deleteCategory: builder.mutation({
-      query: (idCategories: Number) => ({
-        url: `api/category/delete/${idCategories}`,
-        method: 'DELETE',
-        headers: authHeader(),
-      }),
-    }),
-  }),
-  overrideExisting: false,
-});
+    overrideExisting: false,
+  });
 
 // Export hooks for usage in function components, which are
 // auto-generated based on the defined endpoints
 export const {
   useAddCategoryMutation,
   useDeleteCategoryMutation,
-  useGetAllCategoriesMutation,
+  useGetAllCategoriesQuery,
   useUpdateCategoryMutation,
 } = CategoryManagementApi;
 

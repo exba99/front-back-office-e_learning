@@ -10,10 +10,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   useAddLevelCourseMutation,
   useDeleteLevelCourseMutation,
-  useGetAllLevelCoursesMutation,
+  useGetAllLevelCoursesQuery,
   useUpdateLevelCourseMutation,
 } from 'app/services/api/LevelCourseApi';
-import { reloadJs } from 'utils/insertJQuery';
+import { deleteJs, reloadJs } from 'utils/insertJQuery';
 
 interface Props {}
 
@@ -22,10 +22,13 @@ export const LevelCourseManagement = memo((props: Props) => {
   const [isAddAction, setIsAddAction] = useState(false);
   const [levelToUpdate, setLevelToUpdate] = useState(null);
 
-  const [
-    getAllLevelCourse,
-    { data, isError, isSuccess: isSuccessGetAllLevelCourses },
-  ] = useGetAllLevelCoursesMutation();
+  const {
+    data,
+    isError,
+    isSuccess: isSuccessGetAllLevelCourses,
+  } = useGetAllLevelCoursesQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   const [addLevelCourse, { isLoading: isLoadingAddLevelCourse }] =
     useAddLevelCourseMutation();
@@ -37,11 +40,10 @@ export const LevelCourseManagement = memo((props: Props) => {
     useDeleteLevelCourseMutation();
 
   useEffect(() => {
-    getAllLevelCourse(null).unwrap().catch();
-  }, []);
-
-  useEffect(() => {
     reloadJs();
+    return () => {
+      deleteJs();
+    };
   }, []);
 
   const handleSubmitAddLevelCourse = values => {
@@ -52,7 +54,6 @@ export const LevelCourseManagement = memo((props: Props) => {
           render: data?.message,
           type: toast.TYPE.SUCCESS,
         });
-        getAllLevelCourse(null).unwrap();
       })
       .catch(error => {
         toast.update('1', {
@@ -70,7 +71,6 @@ export const LevelCourseManagement = memo((props: Props) => {
           render: data?.message,
           type: toast.TYPE.SUCCESS,
         });
-        getAllLevelCourse(null).unwrap();
       })
       .catch(error => {
         toast.update('1', {
@@ -92,7 +92,6 @@ export const LevelCourseManagement = memo((props: Props) => {
             render: data?.message,
             type: toast.TYPE.SUCCESS,
           });
-          getAllLevelCourse(null).unwrap();
         })
         .catch(error => {
           toast.update('1', {

@@ -3,23 +3,21 @@
  * SideBar
  *
  */
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import styled from 'styled-components/macro';
-import { useTranslation } from 'react-i18next';
-import { messages } from './messages';
-import { useSelector } from 'react-redux';
-import { selectInfoUser } from 'app/pages/DashboardPage/slice/selectors';
-import { reloadJs, deleteJs } from 'utils/insertJQuery';
 import { ItemMenu } from '../ItemMenu/Loadable';
+import { DashboardApi } from 'app/services/api/DashboardApi';
+import { useSelector } from 'react-redux';
 
 interface Props {}
 
 export const SideBar = memo((props: Props) => {
-  const infoUser = useSelector(selectInfoUser);
+  const selectInfoUser = useMemo(
+    () => DashboardApi.endpoints.loadInfoUser.select(),
+    [],
+  );
 
-  useEffect(() => {
-    reloadJs();
-  }, []);
+  const { data: infoUser } = useSelector(selectInfoUser);
 
   return (
     <div className="col-lg-3 col-md-3">
@@ -51,26 +49,49 @@ export const SideBar = memo((props: Props) => {
                 text="Courses"
                 withCollapse={true}
               />
-              <ul>
+              <ul className="nav nav-second-level">
                 <li>
                   <ItemMenu
                     withIcon={false}
-                    text="Catégorie de cours"
+                    text="Category management"
                     url="/category-management"
                   />
                 </li>
                 <li>
                   <ItemMenu
                     withIcon={false}
-                    text="Niveau de cours"
+                    text="Level course management"
                     url="/level-course-management"
                   />
                 </li>
                 <li>
                   <ItemMenu
                     withIcon={false}
-                    text="Langues des cours"
+                    text="Languages management"
                     url="/language-management"
+                  />
+                </li>
+              </ul>
+            </li>
+            <li>
+              <ItemMenu
+                className="fas fa-toolbox"
+                text="User"
+                withCollapse={true}
+              />
+              <ul className="nav nav-second-level">
+                <li>
+                  <ItemMenu
+                    withIcon={false}
+                    text="User management"
+                    url="/user-management"
+                  />
+                </li>
+                <li>
+                  <ItemMenu
+                    withIcon={false}
+                    text="Add user management"
+                    url="/add-user-management"
                   />
                 </li>
               </ul>

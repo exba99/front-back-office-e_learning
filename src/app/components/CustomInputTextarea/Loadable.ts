@@ -6,7 +6,7 @@
 
 import { lazyLoad } from 'utils/loadable';
 
-export const CustomInputText = lazyLoad(
+export const CustomInputTextarea = lazyLoad(
   () => import('./index'),
   module => module.CustomInputTextarea,
 );

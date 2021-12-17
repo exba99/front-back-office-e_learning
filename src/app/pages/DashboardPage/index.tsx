@@ -13,31 +13,18 @@ import { Header } from 'app/components/Header/Loadable';
 import { SideBar } from 'app/components/SideBar/Loadable';
 import { MyProfilPage } from '../MyProfilPage/Loadable';
 import { useDispatch } from 'react-redux';
-import { useDashboardSliceSlice } from './slice';
-import { useLoadInfoUserMutation } from 'app/services/api/DashboardApi';
+import { useLoadInfoUserQuery } from 'app/services/api/DashboardApi';
 import { reloadJs, deleteJs } from 'utils/insertJQuery';
 import { CategoryManagement } from '../CategoryManagement/Loadable';
 import { LevelCourseManagement } from '../LevelCourseManagement/Loadable';
 import { LanguageManagement } from '../LanguageManagement/Loadable';
+import { UserManagement } from '../UserManagement/Loadable';
+import { AddUserManagement } from '../AddUserManagement/Loadable';
 
 interface Props {}
 
 export const DashboardPage = memo((props: Props) => {
-  const dispatch = useDispatch();
-  const { actions } = useDashboardSliceSlice();
-  const [loadInfoUser, { data, isSuccess }] = useLoadInfoUserMutation();
-
-  useEffect(() => {
-    reloadJs();
-  }, []);
-
-  useEffect(() => {
-    loadInfoUser(null).unwrap().catch();
-  }, []);
-
-  if (isSuccess && data) {
-    dispatch(actions.getInfoUser(data));
-  }
+  useLoadInfoUserQuery(undefined, { refetchOnMountOrArgChange: true });
 
   return (
     <div id="main-wrapper">
@@ -70,6 +57,16 @@ export const DashboardPage = memo((props: Props) => {
                   exact={false}
                   path="/language-management"
                   component={LanguageManagement}
+                />
+                <PrivateRoute
+                  exact={false}
+                  path="/user-management"
+                  component={UserManagement}
+                />
+                <PrivateRoute
+                  exact={false}
+                  path="/add-user-management"
+                  component={AddUserManagement}
                 />
                 <Route component={NotFoundPage} />
               </Switch>

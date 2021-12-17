@@ -6,11 +6,11 @@
 import React, { memo, useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { reloadJs } from 'utils/insertJQuery';
+import { deleteJs, reloadJs } from 'utils/insertJQuery';
 import {
   useAddLanguageMutation,
   useDeleteLanguageMutation,
-  useGetAllLanguagesMutation,
+  useGetAllLanguagesQuery,
   useUpdateLanguageMutation,
 } from 'app/services/api/LanguageApi';
 import { PopupAddUpdateLanguage } from 'app/components/PopupAddUpdateLanguage/Loadable';
@@ -22,10 +22,11 @@ export const LanguageManagement = memo((props: Props) => {
   const [isAddAction, setIsAddAction] = useState(false);
   const [languageToUpdate, setLanguageToUpdate] = useState(null);
 
-  const [
-    getAllLanguages,
-    { data, isError, isSuccess: isSuccessGetAllLanguages },
-  ] = useGetAllLanguagesMutation();
+  const {
+    data,
+    isError,
+    isSuccess: isSuccessGetAllLanguages,
+  } = useGetAllLanguagesQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const [addLanguage, { isLoading: isLoadingAddLanguage }] =
     useAddLanguageMutation();
@@ -37,11 +38,10 @@ export const LanguageManagement = memo((props: Props) => {
     useDeleteLanguageMutation();
 
   useEffect(() => {
-    getAllLanguages(null).unwrap().catch();
-  }, []);
-
-  useEffect(() => {
     reloadJs();
+    return () => {
+      deleteJs();
+    };
   }, []);
 
   const handleSubmitAddLanguage = values => {
@@ -52,7 +52,6 @@ export const LanguageManagement = memo((props: Props) => {
           render: data?.message,
           type: toast.TYPE.SUCCESS,
         });
-        getAllLanguages(null).unwrap();
       })
       .catch(error => {
         toast.update('1', {
@@ -70,7 +69,6 @@ export const LanguageManagement = memo((props: Props) => {
           render: data?.message,
           type: toast.TYPE.SUCCESS,
         });
-        getAllLanguages(null).unwrap();
       })
       .catch(error => {
         toast.update('1', {
@@ -92,7 +90,6 @@ export const LanguageManagement = memo((props: Props) => {
             render: data?.message,
             type: toast.TYPE.SUCCESS,
           });
-          getAllLanguages(null).unwrap();
         })
         .catch(error => {
           toast.update('1', {

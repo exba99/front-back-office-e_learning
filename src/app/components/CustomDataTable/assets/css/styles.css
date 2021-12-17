@@ -1,0 +1,153 @@
+.custom-datatable .ant-table {
+  background: none !important;
+}
+
+.custom-datatable .ant-table .ant-table-tbody tr {
+  background: white;
+}
+
+.custom-datatable .ant-table-thead {
+  font-family: Nunito !important;
+  font-size: 14px !important;
+  line-height: 1.38 !important;
+  color: #414141 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+}
+
+.custom-datatable .ant-table-thead > tr > th {
+  border-bottom: 1px solid #707070;
+  font-weight: 700 !important;
+  background: #c5c5c5;
+}
+
+.custom-datatable .ant-table-tbody > tr > td {
+  border-bottom: 1px solid #707070;
+}
+
+.custom-datatable .ant-table-tbody > tr > td:first-child {
+  border-left: 1px solid #707070 !important;
+}
+
+/* ant-table-thead > tr > th */
+
+.custom-datatable .ant-table-tbody {
+  font-family: Nunito !important;
+  font-size: 14px !important;
+  line-height: 1.38 !important;
+  color: #414141 !important;
+}
+
+.custom-datatable
+  .ant-table-thead
+  > tr
+  > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+  height: 80%;
+  background-color: #707070;
+}
+
+.custom-datatable .ant-table-tbody .ant-table-cell::before {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 1px;
+  height: 80%;
+  background-color: #707070;
+  transform: translateY(-50%);
+  transition: background-color 0.3s;
+  content: '';
+}
+
+.custom-datatable
+  .ant-table-container
+  table
+  > thead
+  > tr:first-child
+  th:last-child {
+  border-top-right-radius: 15px !important;
+}
+
+.custom-datatable
+  .ant-table-container
+  table
+  > thead
+  > tr:first-child
+  th:first-child {
+  border-top-left-radius: 15px !important;
+}
+
+/* .ant-table-container table > thead > tr:first-child th:nth-last-child(2) {
+  border-top-right-radius: 15px !important;
+} */
+
+/* .ant-table-container table > tbody > tr > td:nth-last-child(2)::before {
+  width: 0;
+} */
+
+.custom-datatable
+  .ant-table-container
+  table
+  > tbody
+  > tr
+  td:last-child::before {
+  width: 0;
+}
+
+.custom-datatable .ant-table-container table > tbody > tr td:last-child {
+  border-right: 1px solid #707070 !important;
+}
+
+.custom-datatable .ant-table-container table > tbody > tr > td {
+  height: 40px;
+}
+
+/* .ant-table-container
+  table
+  > thead
+  > tr:first-child
+  th:nth-last-child(2)::before {
+  width: 0 !important;
+} */
+
+.ant-pagination-item-active {
+  font-weight: 500 !important;
+  background-color: #e6a801 !important;
+  color: white !important;
+  border-color: inherit !important;
+}
+
+.ant-pagination-item {
+  font-family: 'Nunito' !important;
+  font-size: 16px !important;
+  border: 0 !important;
+  border-radius: 5px !important;
+  margin-right: 13px !important;
+}
+
+.ant-pagination-item:focus a {
+  color: white !important;
+}
+
+.ant-pagination-prev {
+  margin-right: 23px !important;
+  font-family: 'Nunito' !important;
+  font-size: 14px;
+}
+
+.ant-pagination-next {
+  margin-left: 10px !important;
+  font-family: 'Nunito' !important;
+  font-size: 14px;
+}
+
+.prev-icon-pagination {
+  margin-right: 5px !important;
+  width: 11px !important;
+  margin-bottom: 2px !important;
+}
+
+.next-icon-pagination {
+  margin-left: 5px !important;
+  width: 11px !important;
+  margin-bottom: 2px !important;
+}

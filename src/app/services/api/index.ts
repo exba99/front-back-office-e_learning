@@ -4,7 +4,6 @@ export const rootApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://localhost:5001/',
   }),
-  tagTypes: [],
   endpoints: builder => ({}),
 });
 

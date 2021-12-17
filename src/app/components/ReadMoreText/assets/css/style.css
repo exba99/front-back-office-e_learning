@@ -1,0 +1,11 @@
+.text {
+  display: inline;
+  width: 100%;
+  font-family: 'Jost';
+}
+
+.read-or-hide {
+  cursor: pointer;
+  color: #03b97c !important;
+  font-family: 'Jost';
+}

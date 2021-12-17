@@ -1,0 +1,10 @@
+.ck-editor__editable_inline {
+  display: block;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  resize: both;
+  min-height: 40px;
+  line-height: 20px;
+}

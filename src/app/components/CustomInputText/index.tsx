@@ -35,9 +35,9 @@ export const CustomInputText = memo((props: Props) => {
 
   return (
     <div className="form-group smalls">
-      <label>{label}</label>
       <Form.Item
         name={nameInput}
+        label={label}
         initialValue={initialValue}
         rules={[
           {

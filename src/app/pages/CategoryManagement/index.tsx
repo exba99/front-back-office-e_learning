@@ -6,9 +6,9 @@
 import React, { memo, useState, useEffect } from 'react';
 import {
   useAddCategoryMutation,
-  useGetAllCategoriesMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useGetAllCategoriesQuery,
 } from 'app/services/api/CategoryManagementApi';
 import { PopupAddUpdateCategory } from 'app/components/PopupAddUpdateCategory/Loadable';
 import { toast, ToastContainer } from 'react-toastify';
@@ -22,10 +22,11 @@ export const CategoryManagement = memo((props: Props) => {
   const [isAddAction, setIsAddAction] = useState(false);
   const [catToUpdate, setCatToUpdate] = useState(null);
 
-  const [
-    getAllCategories,
-    { data, isError, isSuccess: isSuccessGetAllCategories },
-  ] = useGetAllCategoriesMutation();
+  const {
+    data,
+    isError,
+    isSuccess: isSuccessGetAllCategories,
+  } = useGetAllCategoriesQuery(undefined, { refetchOnMountOrArgChange: true });
 
   const [addCategory, { isLoading: isLoadingAddCategory }] =
     useAddCategoryMutation();
@@ -35,10 +36,6 @@ export const CategoryManagement = memo((props: Props) => {
 
   const [deleteCategory, { isLoading: isLoadingDeleteCategory }] =
     useDeleteCategoryMutation();
-
-  useEffect(() => {
-    getAllCategories(null).unwrap().catch();
-  }, []);
 
   useEffect(() => {
     reloadJs();
@@ -52,7 +49,6 @@ export const CategoryManagement = memo((props: Props) => {
           render: data?.message,
           type: toast.TYPE.SUCCESS,
         });
-        getAllCategories(null).unwrap();
       })
       .catch(error => {
         toast.update('1', {
@@ -70,7 +66,6 @@ export const CategoryManagement = memo((props: Props) => {
           render: data?.message,
           type: toast.TYPE.SUCCESS,
         });
-        getAllCategories(null).unwrap();
       })
       .catch(error => {
         toast.update('1', {
@@ -92,7 +87,6 @@ export const CategoryManagement = memo((props: Props) => {
             render: data?.message,
             type: toast.TYPE.SUCCESS,
           });
-          getAllCategories(null).unwrap();
         })
         .catch(error => {
           toast.update('1', {

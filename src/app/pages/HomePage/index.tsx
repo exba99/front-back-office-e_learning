@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { deleteJs, reloadJs } from 'utils/insertJQuery';
 
 export function HomePage() {
+  useEffect(() => {
+    reloadJs();
+    return () => {
+      deleteJs();
+    };
+  }, []);
   return (
     <div className="row">
       <div className="col-lg-12 col-md-12 col-sm-12 pb-4">

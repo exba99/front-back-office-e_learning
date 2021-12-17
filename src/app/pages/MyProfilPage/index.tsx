@@ -5,55 +5,44 @@
  */
 import React, { memo, useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import { reloadJs } from 'utils/insertJQuery';
+import { deleteJs, reloadJs } from 'utils/insertJQuery';
 import { CustomInputText } from 'app/components/CustomInputText/Loadable';
-import { CustomInputTextarea } from 'app/components/CustomInputTextarea';
+import { CustomInputSummernote } from 'app/components/CustomInputSummernote';
 import { CustomImage } from 'app/components/CustomImage/Loadable';
 import 'antd/dist/antd.css';
 import { Role } from 'app/type';
-import { useSelector } from 'react-redux';
-import { selectInfoUser } from '../DashboardPage/slice/selectors';
 import { getBase64FromFile } from 'utils/base64';
 import { Form } from 'antd';
 import { CustomButtonValidate } from 'app/components/CustomButtonValidate/Loadable';
-import {
-  useUpdateBasicInfoMutation,
-  useUpdatePasswordMutation,
-} from 'app/services/api/MyProfilApi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import history from 'utils/history';
 import {
+  useLoadInfoUserQuery,
+  useUpdateBasicInfoMutation,
+  useUpdatePasswordMutation,
+} from 'app/services/api/DashboardApi';
+import {
   UpdateInterfaceUser,
   UpdatePasswordInterface,
-} from 'app/services/api/MyProfilApi/types';
+} from 'app/services/api/DashboardApi/types';
 
 interface Props {}
 
 export const MyProfilPage = memo((props: Props) => {
-  const [
-    updateBasicInfo,
-    {
-      isSuccess: isSuccessBasicInfo,
-      isLoading: isLoadingBasicInfo,
-      isError: isErrorBasicInfo,
-      data: dataBasicInfo,
-    },
-  ] = useUpdateBasicInfoMutation();
-
-  const [
-    updatePassword,
-    {
-      isSuccess: isSuccessPassword,
-      isLoading: isLoadingPassword,
-      isError: isErrorPassword,
-      data: dataPassword,
-    },
-  ] = useUpdatePasswordMutation();
-
-  const user = useSelector(selectInfoUser);
-
+  const { data: user } = useLoadInfoUserQuery();
+  const [biography, setBiography] = useState('');
   const [img, setImg] = useState(user?.avatar);
+  const [updateBasicInfo, { isLoading: isLoadingBasicInfo }] =
+    useUpdateBasicInfoMutation();
+
+  const [updatePassword, { isLoading: isLoadingPassword }] =
+    useUpdatePasswordMutation();
+
+  const handleChangeSummernoteCallback = value => {
+    setBiography(value);
+    console.log('summernote', value);
+  };
 
   const setImageCallback = file => {
     if (file) {
@@ -62,9 +51,26 @@ export const MyProfilPage = memo((props: Props) => {
   };
 
   const onFinish = (values: any) => {
-    const paylod: UpdateInterfaceUser = values;
+    const paylod: UpdateInterfaceUser = { ...values, Biography: biography };
     paylod.Avatar = img!;
-    updateBasicInfo(paylod).unwrap().catch();
+    updateBasicInfo(paylod)
+      .unwrap()
+      .then(() => {
+        toast.update('1', {
+          render: 'Vos infos ont été mis à jour !',
+          type: toast.TYPE.SUCCESS,
+        });
+        if (values.Email !== user.email) {
+          localStorage.setItem('token', '');
+          history.push('/');
+        }
+      })
+      .catch(() => {
+        toast.update('1', {
+          render: 'Une erreur est survenue !',
+          type: toast.TYPE.ERROR,
+        });
+      });
   };
 
   const onFinishChangePassword = (values: any) => {
@@ -76,68 +82,35 @@ export const MyProfilPage = memo((props: Props) => {
       const paylod: UpdatePasswordInterface = values;
       updatePassword(paylod)
         .unwrap()
-        .catch(error => {
-          if (error?.data?.message.length > 0) {
-            alert(error?.data?.message);
-          }
+        .then(() => {
+          toast.update('1', {
+            render: 'Votre mot de passe à été mis à jour !',
+            type: toast.TYPE.SUCCESS,
+          });
+        })
+        .catch(() => {
+          toast.update('1', {
+            render: 'Une erreur est survenue !',
+            type: toast.TYPE.ERROR,
+          });
         });
     }
   };
 
-  //Updated Password
-  if (isSuccessPassword && dataPassword) {
-    toast.update('1', {
-      render: 'Votre mot de passe à été mis à jour !',
-      type: toast.TYPE.SUCCESS,
-    });
-    localStorage.setItem('token', '');
-    history.push('/');
-  }
-
-  if (isLoadingPassword) {
+  if (isLoadingPassword || isLoadingBasicInfo) {
     toast.info('Loading....', {
       theme: 'colored',
       toastId: '1',
       position: toast.POSITION.TOP_RIGHT,
-    });
-  }
-
-  if (isErrorPassword && !isLoadingPassword) {
-    toast.update('1', {
-      render: 'Une erreur est survenue !',
-      type: toast.TYPE.ERROR,
-    });
-  }
-
-  // Updated basic info
-  if (isSuccessBasicInfo && dataBasicInfo) {
-    toast.update('1', {
-      render: 'Vos infos ont été mis à jour !',
-      type: toast.TYPE.SUCCESS,
-    });
-    localStorage.setItem('token', '');
-    history.push('/');
-  }
-
-  if (isLoadingBasicInfo) {
-    toast.info('Loading....', {
-      theme: 'colored',
-      toastId: '1',
-      position: toast.POSITION.TOP_RIGHT,
-    });
-  }
-
-  if (isErrorBasicInfo && !isLoadingBasicInfo) {
-    toast.update('1', {
-      render: 'Une erreur est survenue !',
-      type: toast.TYPE.ERROR,
     });
   }
 
   useEffect(() => {
     reloadJs();
+    return () => {
+      deleteJs();
+    };
   }, []);
-
   return (
     <>
       <ToastContainer limit={2} />
@@ -168,12 +141,7 @@ export const MyProfilPage = memo((props: Props) => {
 
             <div className="row justify-content-center">
               <div className="col-xl-12 col-lg-12 col-md-12">
-                <Form
-                  layout="vertical"
-                  onFinish={onFinish}
-                  // onFinishFailed={() => alert('Non OK')}
-                  autoComplete="on"
-                >
+                <Form layout="vertical" onFinish={onFinish} autoComplete="on">
                   <div className="form-group smalls">
                     <CustomInputText
                       nameInput="FirstName"
@@ -234,13 +202,11 @@ export const MyProfilPage = memo((props: Props) => {
                         />
                       </div>
                       <div className="form-group smalls">
-                        <CustomInputTextarea
-                          nameInput="Biography"
+                        <CustomInputSummernote
                           label="Votre biographie"
-                          required={true}
-                          errorMessage="Ce champ est obligatoire"
-                          className="form-control summernote"
                           initialValue={user?.biography}
+                          data={biography}
+                          handleChange={handleChangeSummernoteCallback}
                         />
                       </div>
                     </>
