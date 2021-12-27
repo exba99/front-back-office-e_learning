@@ -8,14 +8,28 @@ import React, { memo, useState } from 'react';
 import { Tag } from 'antd';
 import styled from 'styled-components/macro';
 import 'antd/dist/antd.css';
-import { useGetAllUsersQuery } from 'app/services/api/UserManagementApi';
+import {
+  useBlockUserMutation,
+  useGetAllUsersQuery,
+  useUnBlockUserMutation,
+} from 'app/services/api/UserManagementApi';
 import { PopupDetailsUser } from 'app/components/PopupDetailsUser/Loadable';
 import history from 'utils/history';
+import { Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Props {}
 
 export const UserManagement = memo((props: Props) => {
-  const { data: users } = useGetAllUsersQuery();
+  const { confirm } = Modal;
+  const { data: users } = useGetAllUsersQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  const [blockUser, { isLoading: isLoadingBlockUser }] = useBlockUserMutation();
+  const [unBlockUser, { isLoading: isLoadingUnBlockUser }] =
+    useUnBlockUserMutation();
   const [isVisibleDetailUserModal, setIsVisibleDetailUserModal] =
     useState(false);
   const [idUser, setIdUser] = useState(null);
@@ -33,6 +47,61 @@ export const UserManagement = memo((props: Props) => {
   const handleClickAddUser = () => {
     history.push('/add-user-management');
   };
+
+  const showConfirmBlocage = id => {
+    confirm({
+      icon: <ExclamationCircleOutlined />,
+      content: 'Etes vous sûr de vouloir bloquer cette utilisateur',
+      onOk() {
+        blockUser(id)
+          .unwrap()
+          .then(() => {
+            toast.update('1', {
+              render: 'Utilisateur bloqué avec succès !',
+              type: toast.TYPE.SUCCESS,
+            });
+          })
+          .catch(() => {
+            toast.update('1', {
+              render: 'Une erreur est survenue !',
+              type: toast.TYPE.ERROR,
+            });
+          });
+      },
+    });
+  };
+
+  const showConfirmUnBlocage = id => {
+    confirm({
+      icon: <ExclamationCircleOutlined />,
+      content: 'Etes vous sûr de vouloir debloquer cette utilisateur',
+      onOk() {
+        unBlockUser(id)
+          .unwrap()
+          .then(() => {
+            toast.update('1', {
+              render: 'Utilisateur debloqué !',
+              type: toast.TYPE.SUCCESS,
+            });
+          })
+          .catch(() => {
+            toast.update('1', {
+              render: 'Une erreur est survenue !',
+              type: toast.TYPE.ERROR,
+            });
+          });
+      },
+    });
+  };
+
+  if (isLoadingBlockUser || isLoadingUnBlockUser) {
+    toast.info('Loading....', {
+      theme: 'colored',
+      toastId: '1',
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  }
+
   const columns = [
     {
       title: 'Avatar',
@@ -84,10 +153,20 @@ export const UserManagement = memo((props: Props) => {
             onClick={() => handleClickDetail(records.idUser)}
             style={{ fontSize: '16px', cursor: 'pointer', color: '#03b97c' }}
           ></i>
-          <i
-            className="fas fa-lock"
-            style={{ fontSize: '16px', cursor: 'pointer', color: '#03b97c' }}
-          ></i>
+          {console.log('Status user', records)}
+          {records.statusUser === 'ACTIVED' ? (
+            <i
+              className="fas fa-lock"
+              onClick={() => showConfirmBlocage(records.idUser)}
+              style={{ fontSize: '16px', cursor: 'pointer', color: '#03b97c' }}
+            ></i>
+          ) : (
+            <i
+              className="fas fa-unlock"
+              onClick={() => showConfirmUnBlocage(records.idUser)}
+              style={{ fontSize: '16px', cursor: 'pointer', color: '#03b97c' }}
+            ></i>
+          )}
           <i
             className="fas fa-edit"
             style={{ fontSize: '16px', cursor: 'pointer', color: '#03b97c' }}
@@ -99,6 +178,7 @@ export const UserManagement = memo((props: Props) => {
 
   return (
     <>
+      <ToastContainer limit={2} />
       <div className="row justify-content-between">
         <div className="col-lg-12 col-md-12 col-sm-12 pb-4">
           <div className="dashboard_wrap d-flex align-items-center justify-content-between">

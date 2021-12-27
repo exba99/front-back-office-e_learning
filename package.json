@@ -36,6 +36,7 @@
     "fontfaceobserver": "2.1.0",
     "formik": "2.2.9",
     "history": "4.10.1",
+    "html-to-react": "1.4.7",
     "husky": "7.0.0",
     "i18next": "20.3.2",
     "i18next-browser-languagedetector": "6.1.2",

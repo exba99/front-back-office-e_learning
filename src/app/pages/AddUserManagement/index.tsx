@@ -4,7 +4,6 @@
  *
  */
 import React, { memo, useState } from 'react';
-import styled from 'styled-components/macro';
 import { CustomInputText } from 'app/components/CustomInputText/Loadable';
 import { CustomInputSummernote } from 'app/components/CustomInputSummernote/Loadable';
 import { CustomImage } from 'app/components/CustomImage/Loadable';
@@ -12,12 +11,24 @@ import { getBase64FromFile } from 'utils/base64';
 import 'antd/dist/antd.css';
 import { Form } from 'antd';
 import { CustomButtonValidate } from 'app/components/CustomButtonValidate/Loadable';
+import { CustomInputSelect } from 'app/components/CustomInputSelect/Loadable';
+import { Select } from 'antd';
+import {
+  useAddUserMutation,
+  useGetAllRolesQuery,
+} from 'app/services/api/UserManagementApi';
+import 'react-toastify/dist/ReactToastify.css';
+import { InfoUserPost } from 'app/services/api/DashboardApi/types';
+import { ToastContainer, toast } from 'react-toastify';
 
 interface Props {}
 
 export const AddUserManagement = memo((props: Props) => {
+  const { Option } = Select;
   const [biography, setBiography] = useState('');
   const [img, setImg] = useState(null);
+  const { data: roles } = useGetAllRolesQuery();
+  const [addUser, { isLoading: isLoadingAddUser }] = useAddUserMutation();
 
   const setImageCallback = file => {
     if (file) {
@@ -29,9 +40,36 @@ export const AddUserManagement = memo((props: Props) => {
     console.log('summernote', value);
   };
 
-  const onFinish = () => {};
+  const onFinish = values => {
+    const paylod: InfoUserPost = { ...values, Biography: biography };
+    paylod.Avatar = img!;
+    addUser(paylod)
+      .unwrap()
+      .then(() => {
+        toast.update('1', {
+          render: 'Vos infos ont été mis à jour !',
+          type: toast.TYPE.SUCCESS,
+        });
+      })
+      .catch(() => {
+        toast.update('1', {
+          render: 'Une erreur est survenue !',
+          type: toast.TYPE.ERROR,
+        });
+      });
+  };
+
+  if (isLoadingAddUser) {
+    toast.info('Loading....', {
+      theme: 'colored',
+      toastId: '1',
+      position: toast.POSITION.TOP_RIGHT,
+    });
+  }
+
   return (
     <>
+      <ToastContainer limit={2} />
       <div className="row justify-content-between">
         <div className="col-lg-12 col-md-12 col-sm-12 pb-4">
           <div className="dashboard_wrap d-flex align-items-center justify-content-between">
@@ -124,6 +162,24 @@ export const AddUserManagement = memo((props: Props) => {
                           />
                         </div>
                         <div className="form-group smalls">
+                          <CustomInputSelect
+                            nameInput="roleId"
+                            label="Choisir le profil"
+                            required={true}
+                            errorMessage="Ce champ est obligatoire"
+                            placeholder="selectionnez un profil"
+                          >
+                            {roles! &&
+                              roles!.map((value, k) => (
+                                <>
+                                  <Option value={value.id} key={k}>
+                                    {value.name}
+                                  </Option>
+                                </>
+                              ))}
+                          </CustomInputSelect>
+                        </div>
+                        <div className="form-group smalls">
                           <CustomInputText
                             nameInput="EmailContact"
                             label="Email de contact"
@@ -147,7 +203,8 @@ export const AddUserManagement = memo((props: Props) => {
                           <CustomInputText
                             nameInput="Speciality"
                             label="Votre Spécialité"
-                            required={false}
+                            required={true}
+                            errorMessage="Ce champ est obligatoire"
                             placeholder="votre spécialité"
                           />
                         </div>

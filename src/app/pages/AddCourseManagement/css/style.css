@@ -1,0 +1,36 @@
+.ant-upload.ant-upload-drag {
+  height: 200px;
+}
+
+.tab-content > .tab-pane {
+  padding-top: 0 !important;
+  margin-bottom: 30px;
+}
+
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-icon {
+  background: #03b97c !important;
+}
+
+.ant-steps-item-process .ant-steps-item-icon {
+  border-color: #03b97c !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+  border-color: #03b97c !important;
+}
+
+.ant-steps-item-finish
+  > .ant-steps-item-container
+  > .ant-steps-item-content
+  > .ant-steps-item-title::after {
+  background-color: #03b97c !important;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #03b97c;
+}

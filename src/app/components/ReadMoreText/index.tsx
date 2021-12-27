@@ -19,6 +19,7 @@ export const ReadMoreText = memo((props: Props) => {
   };
   return (
     <p className="text">
+      {console.log('texte slice: ', text)}
       {isReadMore ? text.slice(0, 150) : text}
       <span onClick={toggleReadMore} className="read-or-hide">
         {isReadMore ? ' Voir plus...' : ' Voir moins'}

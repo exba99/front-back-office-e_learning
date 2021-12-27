@@ -19,8 +19,14 @@ interface Props {
 }
 
 export const PopupDetailsUser = memo((props: Props) => {
+  const HtmlToReactParser = require('html-to-react').Parser;
+  const htmlToReactParser = new HtmlToReactParser();
+
   const { isVisibleModal, handleCancelModal, idUser } = props;
-  const { data } = useGetUserQuery(idUser ?? skipToken);
+  const { data } = useGetUserQuery(idUser ?? skipToken, {
+    refetchOnMountOrArgChange: true,
+  });
+  const biography = htmlToReactParser.parse(data?.biography);
   return (
     <Modal
       title="Detail d'un utilisateur"
@@ -58,7 +64,7 @@ export const PopupDetailsUser = memo((props: Props) => {
                   <div className="ed_header_short">
                     <p style={{ fontFamily: 'Jost' }}>
                       <ReadMoreText>
-                        {data?.biography ? data?.biography : ''}
+                        {data?.biography ? biography : ''}
                       </ReadMoreText>
                     </p>
                   </div>
@@ -100,7 +106,7 @@ export const PopupDetailsUser = memo((props: Props) => {
                 label="Status"
                 labelStyle={{ fontWeight: 'bold', textTransform: 'uppercase' }}
               >
-                {data?.statusUser && data?.statusUser === 'ACTIVATED' ? (
+                {data?.statusUser && data?.statusUser === 'ACTIVED' ? (
                   <Tag color="geekblue">{data?.statusUser}</Tag>
                 ) : (
                   <Tag color="volcano">{data?.statusUser}</Tag>

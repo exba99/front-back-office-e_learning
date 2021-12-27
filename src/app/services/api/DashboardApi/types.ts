@@ -15,6 +15,20 @@ export interface InfoUser {
   statusUser?: string;
 }
 
+export interface InfoUserPost {
+  IddUser: string;
+  Email: string;
+  EmailContact: string;
+  FirstName: string;
+  LastName: string;
+  Avatar: string;
+  PhoneNumber: string;
+  Biography?: string;
+  Speciality: string;
+  IdRole: string;
+  Password: string;
+}
+
 export interface UpdateInterfaceUser {
   Email: string;
   EmailContact: string;

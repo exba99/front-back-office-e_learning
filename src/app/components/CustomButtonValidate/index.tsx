@@ -20,12 +20,14 @@ export const CustomButtonValidate = memo((props: Props) => {
     className = 'btn btn-md theme-bg text-white',
     text,
     fullWidth = false,
+    ...restProps
   } = props;
   return (
     <button
       type="submit"
       className={`${className} ${fullWidth && 'full-width'}`}
       disabled={!isValid}
+      {...restProps}
     >
       {text}
     </button>
