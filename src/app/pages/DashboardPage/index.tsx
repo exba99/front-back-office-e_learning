@@ -21,6 +21,8 @@ import { LanguageManagement } from '../LanguageManagement/Loadable';
 import { UserManagement } from '../UserManagement/Loadable';
 import { AddUserManagement } from '../AddUserManagement/Loadable';
 import { AddCourseManagement } from '../AddCourseManagement/Loadable';
+import { PreviewCourse } from '../PreviewCourse/Loadable';
+import { CourseManagement } from '../CourseManagement/Loadable';
 
 interface Props {}
 
@@ -73,6 +75,16 @@ export const DashboardPage = memo((props: Props) => {
                   exact={false}
                   path="/add-course"
                   component={AddCourseManagement}
+                />
+                <PrivateRoute
+                  exact={false}
+                  path="/preview-course"
+                  component={PreviewCourse}
+                />
+                <PrivateRoute
+                  exact={false}
+                  path="/course-management"
+                  component={CourseManagement}
                 />
                 <Route component={NotFoundPage} />
               </Switch>

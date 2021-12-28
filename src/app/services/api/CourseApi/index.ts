@@ -4,7 +4,7 @@ import { rootApi } from '../';
 
 export const CourseApi = rootApi
   .enhanceEndpoints({
-    addTagTypes: ['getAllContentCourse'],
+    addTagTypes: ['getAllContentCourse', 'getAllCourse'],
     endpoints: {
       getAllContentCourse: {
         providesTags: ['getAllContentCourse'],
@@ -18,6 +18,7 @@ export const CourseApi = rootApi
           url: `api/course/get-all`,
           headers: authHeader(),
         }),
+        providesTags: ['getAllCourse'],
       }),
       getCourseById: builder.query<any, Number>({
         query: id => ({
@@ -64,6 +65,7 @@ export const CourseApi = rootApi
           method: 'GET',
           headers: authHeader(),
         }),
+        invalidatesTags: ['getAllCourse'],
       }),
     }),
     overrideExisting: false,

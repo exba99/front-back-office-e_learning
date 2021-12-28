@@ -117,6 +117,13 @@ export const SideBar = memo((props: Props) => {
                         url="/add-course"
                       />
                     </li>
+                    <li>
+                      <ItemMenu
+                        withIcon={false}
+                        text="Course Management"
+                        url="/course-management"
+                      />
+                    </li>
                   </ul>
                 </li>
               </>

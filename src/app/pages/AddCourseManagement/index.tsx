@@ -46,6 +46,7 @@ import { CustomImgDragger } from 'app/components/CustomImgDragger';
 import { getBase64FromFile } from 'utils/base64';
 import { skipToken } from '@reduxjs/toolkit/dist/query';
 import { PopupAddChapter } from 'app/components/PopupAddChapter';
+import history from 'utils/history';
 
 interface Props {}
 
@@ -133,6 +134,10 @@ export const AddCourseManagement = memo((props: Props) => {
   const handleShowModalAddChapter = id => {
     setPartCourseId(id);
     setIsVisibleModalAddChapter(true);
+  };
+
+  const handleClickPreviewCourse = () => {
+    history.push('/preview-course', { idCourse: basicInfosCourse?.courseId });
   };
 
   const handleClickPublishCourse = () => {
@@ -705,7 +710,10 @@ export const AddCourseManagement = memo((props: Props) => {
               </p>
             </div>
             <div className="succ_123 mt-2">
-              <a href="course-detail.html" className="btn theme-bg text-white">
+              <a
+                onClick={handleClickPreviewCourse}
+                className="btn theme-bg text-white"
+              >
                 Voir le cours
               </a>
             </div>
